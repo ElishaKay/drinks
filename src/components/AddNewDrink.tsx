@@ -5,12 +5,9 @@ const AddNewDrink = () => {
         strDrink: "",
         strDrinkThumb: "",
         strInstructions: "",
-        strIngredient1: "",
-        strIngredient2: "",
-        strIngredient3: "",
-        strIngredient4: "",
-        strIngredient5: ""
     });
+    const [ingredients, setIngredients] = useState<string[]>([]);
+    const [currentIngredient, setCurrentIngredient] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -18,10 +15,26 @@ const AddNewDrink = () => {
         const savedCocktails = JSON.parse(localStorage.getItem("cocktails") || "[]");
         const newDrink = {
             ...drink,
-            idDrink: Date.now().toString()
+            idDrink: Date.now().toString(),
+            ...ingredients.reduce((acc, ingredient, index) => ({
+                ...acc,
+                [`strIngredient${index + 1}`]: ingredient
+            }), {})
         };
         localStorage.setItem("cocktails", JSON.stringify([...savedCocktails, newDrink]));
         setSubmitted(true);
+    };
+
+    const handleIngredientSubmit = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && currentIngredient.trim()) {
+            e.preventDefault();
+            setIngredients([...ingredients, currentIngredient.trim()]);
+            setCurrentIngredient("");
+        }
+    };
+
+    const removeIngredient = (index: number) => {
+        setIngredients(ingredients.filter((_, i) => i !== index));
     };
 
     const resetForm = () => {
@@ -29,12 +42,9 @@ const AddNewDrink = () => {
             strDrink: "",
             strDrinkThumb: "",
             strInstructions: "",
-            strIngredient1: "",
-            strIngredient2: "",
-            strIngredient3: "",
-            strIngredient4: "",
-            strIngredient5: ""
         });
+        setIngredients([]);
+        setCurrentIngredient("");
         setSubmitted(false);
     };
 
@@ -130,14 +140,15 @@ const AddNewDrink = () => {
                     }}
                 />
 
-                {[1, 2, 3, 4, 5].map((num) => (
+                <div style={{ position: "relative" }}>
                     <input
-                        key={num}
                         type="text"
-                        placeholder={`Ingredient ${num}`}
-                        value={drink[`strIngredient${num}` as keyof typeof drink]}
-                        onChange={(e) => setDrink({ ...drink, [`strIngredient${num}`]: e.target.value })}
+                        placeholder="Add ingredient (press Enter)"
+                        value={currentIngredient}
+                        onChange={(e) => setCurrentIngredient(e.target.value)}
+                        onKeyDown={handleIngredientSubmit}
                         style={{
+                            width: "100%",
                             padding: "0.8rem",
                             borderRadius: "8px",
                             border: "2px solid #ff69b4",
@@ -146,7 +157,44 @@ const AddNewDrink = () => {
                             fontFamily: "'Press Start 2P', cursive"
                         }}
                     />
-                ))}
+                    
+                    <div style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "0.5rem",
+                        marginTop: "1rem"
+                    }}>
+                        {ingredients.map((ingredient, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    background: "rgba(255, 105, 180, 0.2)",
+                                    padding: "0.5rem",
+                                    borderRadius: "4px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.5rem"
+                                }}
+                            >
+                                <span>{ingredient}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => removeIngredient(index)}
+                                    style={{
+                                        background: "none",
+                                        border: "none",
+                                        color: "#ff69b4",
+                                        cursor: "pointer",
+                                        padding: "0.2rem",
+                                        fontSize: "1rem"
+                                    }}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
                 <textarea
                     placeholder="Instructions"
