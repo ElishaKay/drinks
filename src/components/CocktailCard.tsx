@@ -6,11 +6,10 @@ interface CocktailCardProps {
 
 const CocktailCard: React.FC<CocktailCardProps> = ({ cocktail }) => {
     return (
-        <div className="cocktail-card">
+        <Link to={`/cocktail/${cocktail.idDrink}`} className="cocktail-card">
             <img src={cocktail.strDrinkThumb} alt={cocktail.strDrink} />
             <h3>{cocktail.strDrink}</h3>
-            <Link to={`/cocktail/${cocktail.idDrink}`}>View Recipe</Link>
-        </div>
+        </Link>
     );
 };
 
