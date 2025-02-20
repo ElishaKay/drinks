@@ -16,7 +16,7 @@ const CocktailPage = () => {
 
     return (
         <div className="container" style={{
-            maxWidth: "800px",
+            // maxWidth: "800px",
             margin: "0 auto",
             padding: "2rem",
             textAlign: "center",

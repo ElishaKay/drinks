@@ -11,13 +11,16 @@ const Home = () => {
 
     return (
         <div style={{
-            maxWidth: "1200px",
+            // maxWidth: "1200px",
             margin: "0 auto",
             padding: "2rem",
             textAlign: "center",
             background: "linear-gradient(to bottom, #1a1a1a, #2d2d2d)",
             color: "#ff69b4",
-            fontFamily: "'Press Start 2P', cursive"
+            fontFamily: "'Press Start 2P', cursive",
+            minHeight: "88vh",
+            display: "flex",
+            flexDirection: "column"
         }}>
             <h1 style={{
                 fontSize: "3rem",
@@ -27,7 +30,9 @@ const Home = () => {
                 Explore Cocktails
             </h1>
             {cocktails.length > 0 ? (
-                <DrinkCarousel drinks={cocktails} />
+                <div style={{ flex: 1 }}>
+                    <DrinkCarousel drinks={cocktails} />
+                </div>
             ) : (
                 <p style={{
                     background: "rgba(255, 105, 180, 0.1)",
