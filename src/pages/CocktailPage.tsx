@@ -12,7 +12,18 @@ const CocktailPage = () => {
         }
     }, [id]);
 
-    if (!cocktail) return <p className="text-center">Loading...</p>;
+    if (!cocktail) return (
+        <div style={{
+          backgroundColor: "#1a1a1a",
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "#ff69b4"
+        }}>
+          <p>Loading...</p>
+        </div>
+      );
 
     return (
         <div className="container" style={{

@@ -11,6 +11,7 @@ const AddNewDrink = () => {
         strIngredient4: "",
         strIngredient5: ""
     });
+    const [submitted, setSubmitted] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,7 +21,59 @@ const AddNewDrink = () => {
             idDrink: Date.now().toString()
         };
         localStorage.setItem("cocktails", JSON.stringify([...savedCocktails, newDrink]));
+        setSubmitted(true);
     };
+
+    const resetForm = () => {
+        setDrink({
+            strDrink: "",
+            strDrinkThumb: "",
+            strInstructions: "",
+            strIngredient1: "",
+            strIngredient2: "",
+            strIngredient3: "",
+            strIngredient4: "",
+            strIngredient5: ""
+        });
+        setSubmitted(false);
+    };
+
+    if (submitted) {
+        return (
+            <div style={{
+                maxWidth: "800px",
+                margin: "0 auto",
+                padding: "2rem",
+                textAlign: "center",
+                background: "linear-gradient(to bottom, #1a1a1a, #2d2d2d)",
+                color: "#ff69b4",
+                fontFamily: "'Press Start 2P', cursive"
+            }}>
+                <h1 style={{
+                    fontSize: "3rem",
+                    textShadow: "2px 2px 0px #ff00ff, 4px 4px 0px #00ffff",
+                    marginBottom: "2rem"
+                }}>Your drink has been added successfully</h1>
+
+                <button
+                    onClick={resetForm}
+                    style={{
+                        padding: "1rem",
+                        borderRadius: "8px",
+                        border: "none",
+                        background: "#ff69b4",
+                        color: "#1a1a1a",
+                        fontFamily: "'Press Start 2P', cursive",
+                        cursor: "pointer",
+                        textShadow: "1px 1px #ff00ff",
+                        boxShadow: "0 0 10px #ff00ff"
+                    }}
+                >
+                    Add another one
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div style={{
