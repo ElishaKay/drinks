@@ -140,7 +140,7 @@ const AddNewDrink = () => {
                     }}
                 />
 
-                <div style={{ position: "relative" }}>
+                <div style={{ position: "relative", width: "100%" }}>
                     <input
                         type="text"
                         placeholder="Add ingredient (press Enter)"
@@ -149,6 +149,7 @@ const AddNewDrink = () => {
                         onKeyDown={handleIngredientSubmit}
                         style={{
                             width: "100%",
+                            boxSizing: "border-box",
                             padding: "0.8rem",
                             borderRadius: "8px",
                             border: "2px solid #ff69b4",
