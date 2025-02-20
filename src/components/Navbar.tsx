@@ -7,7 +7,10 @@ const Navbar = () => {
             background: "linear-gradient(to bottom, #1a1a1a, #2d2d2d)",
             padding: "1rem 2rem",
             color: "#ff69b4",
-            fontFamily: "'Press Start 2P', cursive"
+            fontFamily: "'Press Start 2P', cursive",
+            position: "sticky",
+            top: 0,
+            zIndex: 100
         }}>
             <div style={{
                 display: "flex",

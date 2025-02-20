@@ -30,7 +30,9 @@ const CocktailCard: React.FC<CocktailCardProps> = ({ cocktail }) => {
                 fontSize: "2rem",
                 textOverflow: "ellipsis", 
                 overflow: "hidden",
-                whiteSpace: "nowrap"
+                whiteSpace: "nowrap",
+                color: "#00ffff",
+                textShadow: "2px 2px #ff00ff"
             }}>
                 {cocktail.strDrink}
             </h3>
