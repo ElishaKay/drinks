@@ -28,11 +28,11 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
     const handleNext = () => {
         if (containerRef.current) {
             const maxScroll = containerRef.current.scrollWidth - containerRef.current.clientWidth;
-            let newPosition = position + scrollAmount;
+            let newPosition = position + scrollAmount * 3; // Multiply by 3 to move one full card
             
             // If we're near the end, jump back to the first set of drinks
-            if (newPosition >= maxScroll - scrollAmount) {
-                newPosition = scrollAmount; // Move to the start of the second set
+            if (newPosition >= maxScroll - scrollAmount * 3) {
+                newPosition = scrollAmount * 3; // Move to the start of the second set
             }
             
             setPosition(newPosition);
@@ -45,11 +45,11 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
 
     const handlePrev = () => {
         if (containerRef.current) {
-            let newPosition = position - scrollAmount;
+            let newPosition = position - scrollAmount * 3; // Multiply by 3 to move one full card
             
             // If we're near the start, jump to the last set of drinks
-            if (newPosition <= scrollAmount) {
-                newPosition = containerRef.current.scrollWidth - (containerRef.current.clientWidth + scrollAmount);
+            if (newPosition <= scrollAmount * 3) {
+                newPosition = containerRef.current.scrollWidth - (containerRef.current.clientWidth + scrollAmount * 3);
             }
             
             setPosition(newPosition);
