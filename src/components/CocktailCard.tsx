@@ -10,8 +10,8 @@ const CocktailCard: React.FC<CocktailCardProps> = ({ cocktail }) => {
             to={`/cocktail/${cocktail.idDrink}`} 
             className="cocktail-card"
             style={{
-                maxWidth: "600px",
-                maxHeight: "600px", 
+                maxWidth: "1200px",
+                height: "100%",
                 display: "block",
                 overflow: "hidden"
             }}
@@ -21,12 +21,12 @@ const CocktailCard: React.FC<CocktailCardProps> = ({ cocktail }) => {
                 alt={cocktail.strDrink}
                 style={{
                     width: "100%",
-                    height: "400px",
+                    height: "calc(100% - 60px)", // Leave space for title
                     objectFit: "cover"
                 }}
             />
             <h3 style={{
-                margin: "20px 0",
+                margin: "10px 0",
                 fontSize: "2rem",
                 textOverflow: "ellipsis", 
                 overflow: "hidden",
