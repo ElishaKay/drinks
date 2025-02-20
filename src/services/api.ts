@@ -4,7 +4,7 @@ const API_BASE = "https://www.thecocktaildb.com/api/json/v1/1";
 
 export const fetchCocktails = async (searchTerm: string) => {
     try {
-        const response = await axios.get(`${API_BASE}/search.php?s=${searchTerm}`);
+        const response = await axios.get(`${API_BASE}/search.php?s=${searchTerm || "martini"}`);
         return response.data.drinks;
     } catch (error) {
         console.error("Error fetching cocktails:", error);
