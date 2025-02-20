@@ -16,13 +16,16 @@ const Navbar = () => {
                 maxWidth: "1200px",
                 margin: "0 auto"
             }}>
-                <h1 style={{
-                    fontSize: "2rem",
-                    textShadow: "2px 2px 0px #ff00ff, 4px 4px 0px #00ffff",
-                    margin: 0
-                }}>Cocktail Finder</h1>
+                <Link to="/" style={{textDecoration: "none"}}>
+                    <h1 style={{
+                        fontSize: "2rem",
+                        textShadow: "2px 2px 0px #ff00ff, 4px 4px 0px #00ffff",
+                        margin: 0,
+                        color: "#ff69b4"
+                    }}>Cocktail Finder</h1>
+                </Link>
                 <ul style={{
-                    listStyle: "none",
+                    listStyle: "none", 
                     display: "flex",
                     gap: "2rem",
                     margin: 0,
