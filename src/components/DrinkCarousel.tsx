@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import CocktailCard from "./CocktailCard";
 
 interface Drink {
     idDrink: string;
@@ -56,10 +57,9 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                     gap: "20px"
                 }}
             >
-                {drinks.map((drink, i) => (
+                {drinks.map((drink) => (
                     <motion.div
                         key={drink.idDrink}
-                        className="drink-card"
                         initial={{ rotateY: 0 }}
                         animate={{ 
                             rotateY: position > 0 ? -15 : 0,
@@ -75,17 +75,7 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                             flex: "0 0 180px"
                         }}
                     >
-                        <img 
-                            src={drink.strDrinkThumb} 
-                            alt={drink.strDrink}
-                            style={{
-                                width: "100%",
-                                height: "200px",
-                                objectFit: "cover",
-                                borderRadius: "12px 12px 0 0"
-                            }}
-                        />
-                        <h3>{drink.strDrink}</h3>
+                        <CocktailCard cocktail={drink} />
                     </motion.div>
                 ))}
             </motion.div>
