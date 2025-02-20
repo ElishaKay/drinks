@@ -92,11 +92,11 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                 style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "center", 
                     gap: "20px",
                     padding: "1rem",
                     position: "relative",
-                    height: "400px"
+                    height: "100vh"
                 }}
             >
                 {getVisibleDrinks().map((drink, index) => (
@@ -105,10 +105,16 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                         initial={false}
                         animate={{
                             scale: index === 1 ? 1 : 0.8,
-                            x: (index - 1) * 250,
-                            rotateY: index === 0 ? 45 : index === 2 ? -45 : 0,
+                            x: (index - 1) * (window.innerWidth * 0.25),
+                            rotateY: index === 0 ? 33 : index === 2 ? -33 : 0,
                             z: index === 1 ? 0 : -100,
                             opacity: index === 1 ? 1 : 0.6
+                        }}
+                        whileHover={{
+                            scale: index === 1 ? 1.1 : 0.9,
+                            transition: {
+                                duration: 0.2
+                            }
                         }}
                         transition={{
                             type: "spring",
@@ -117,8 +123,10 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                         }}
                         style={{
                             position: "absolute",
-                            width: "200px",
-                            transformStyle: "preserve-3d"
+                            width: "25%",
+                            height: "80vh",
+                            transformStyle: "preserve-3d",
+                            transformOrigin: index === 0 ? "right center" : index === 2 ? "left center" : "center center"
                         }}
                     >
                         <div style={{
@@ -128,7 +136,11 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                             border: "2px solid #ff69b4",
                             boxShadow: index === 1 ? 
                                 "0 0 25px #ff00ff" : 
-                                "0 0 15px rgba(255, 0, 255, 0.5)"
+                                "0 0 15px rgba(255, 0, 255, 0.5)",
+                            perspective: "1000px",
+                            height: "100%",
+                            display: "flex",
+                            flexDirection: "column"
                         }}>
                             <CocktailCard cocktail={drink} />
                         </div>
