@@ -15,48 +15,92 @@ interface DrinkCarouselProps {
 
 const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
     const [position, setPosition] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const [duplicatedDrinks, setDuplicatedDrinks] = useState<Drink[]>([]);
 
     useEffect(() => {
-        // Duplicate the drinks array 3 times to create a seamless loop
-        setDuplicatedDrinks([...drinks, ...drinks, ...drinks]);
+        // Create a circular array by adding first two elements at the end
+        setDuplicatedDrinks([...drinks, drinks[0], drinks[1]]);
     }, [drinks]);
+
+    useEffect(() => {
+        const handleKeyPress = (e: KeyboardEvent) => {
+            if (e.key === "ArrowLeft") {
+                handlePrev();
+            } else if (e.key === "ArrowRight") {
+                handleNext();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyPress);
+        return () => window.removeEventListener("keydown", handleKeyPress);
+    }, [position, currentIndex]);
 
     const scrollAmount = 200;
 
     const handleNext = () => {
         if (containerRef.current) {
-            const maxScroll = containerRef.current.scrollWidth - containerRef.current.clientWidth;
-            let newPosition = position + scrollAmount * 3; // Multiply by 3 to move one full card
+            let newPosition = position + scrollAmount;
+            let newIndex = currentIndex + 1;
             
-            // If we're near the end, jump back to the first set of drinks
-            if (newPosition >= maxScroll - scrollAmount * 3) {
-                newPosition = scrollAmount * 3; // Move to the start of the second set
+            // If we reach the end of the duplicated list
+            if (newIndex >= drinks.length) {
+                // Reset to first item position without animation
+                containerRef.current.style.scrollBehavior = 'auto';
+                containerRef.current.scrollLeft = 0;
+                newPosition = scrollAmount;
+                newIndex = 1;
+                
+                // Re-enable smooth scrolling after a brief delay
+                setTimeout(() => {
+                    if (containerRef.current) {
+                        containerRef.current.style.scrollBehavior = 'smooth';
+                        containerRef.current.scrollLeft = newPosition;
+                    }
+                }, 50);
+            } else {
+                containerRef.current.scrollTo({
+                    left: newPosition,
+                    behavior: 'smooth'
+                });
             }
             
             setPosition(newPosition);
-            containerRef.current.scrollTo({
-                left: newPosition,
-                behavior: 'smooth'
-            });
+            setCurrentIndex(newIndex);
         }
     };
 
     const handlePrev = () => {
         if (containerRef.current) {
-            let newPosition = position - scrollAmount * 3; // Multiply by 3 to move one full card
+            let newPosition = position - scrollAmount;
+            let newIndex = currentIndex - 1;
             
-            // If we're near the start, jump to the last set of drinks
-            if (newPosition <= scrollAmount * 3) {
-                newPosition = containerRef.current.scrollWidth - (containerRef.current.clientWidth + scrollAmount * 3);
+            // If we reach the start
+            if (newIndex < 0) {
+                // Jump to end position without animation
+                const endScrollPosition = (drinks.length - 1) * scrollAmount;
+                containerRef.current.style.scrollBehavior = 'auto';
+                containerRef.current.scrollLeft = endScrollPosition;
+                newPosition = endScrollPosition - scrollAmount;
+                newIndex = drinks.length - 2;
+                
+                // Re-enable smooth scrolling after a brief delay
+                setTimeout(() => {
+                    if (containerRef.current) {
+                        containerRef.current.style.scrollBehavior = 'smooth';
+                        containerRef.current.scrollLeft = newPosition;
+                    }
+                }, 50);
+            } else {
+                containerRef.current.scrollTo({
+                    left: newPosition,
+                    behavior: 'smooth'
+                });
             }
             
             setPosition(newPosition);
-            containerRef.current.scrollTo({
-                left: newPosition,
-                behavior: 'smooth'
-            });
+            setCurrentIndex(newIndex);
         }
     };
 
