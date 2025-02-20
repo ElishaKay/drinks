@@ -14,14 +14,13 @@ interface DrinkCarouselProps {
 }
 
 const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
-    const [position, setPosition] = useState(0);
     const [currentIndex, setCurrentIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const [duplicatedDrinks, setDuplicatedDrinks] = useState<Drink[]>([]);
 
     useEffect(() => {
-        // Create a circular array by adding first two elements at the end
-        setDuplicatedDrinks([...drinks, drinks[0], drinks[1]]);
+        // Create a circular array by adding first element at the end
+        setDuplicatedDrinks([...drinks, drinks[0]]);
     }, [drinks]);
 
     useEffect(() => {
@@ -35,73 +34,24 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
 
         window.addEventListener("keydown", handleKeyPress);
         return () => window.removeEventListener("keydown", handleKeyPress);
-    }, [position, currentIndex]);
-
-    const scrollAmount = 200;
+    }, [currentIndex]);
 
     const handleNext = () => {
-        if (containerRef.current) {
-            let newPosition = position + scrollAmount;
-            let newIndex = currentIndex + 1;
-            
-            // If we reach the end of the duplicated list
-            if (newIndex >= drinks.length) {
-                // Reset to first item position without animation
-                containerRef.current.style.scrollBehavior = 'auto';
-                containerRef.current.scrollLeft = 0;
-                newPosition = scrollAmount;
-                newIndex = 1;
-                
-                // Re-enable smooth scrolling after a brief delay
-                setTimeout(() => {
-                    if (containerRef.current) {
-                        containerRef.current.style.scrollBehavior = 'smooth';
-                        containerRef.current.scrollLeft = newPosition;
-                    }
-                }, 50);
-            } else {
-                containerRef.current.scrollTo({
-                    left: newPosition,
-                    behavior: 'smooth'
-                });
-            }
-            
-            setPosition(newPosition);
-            setCurrentIndex(newIndex);
-        }
+        setCurrentIndex((prevIndex) => 
+            prevIndex >= drinks.length - 1 ? 0 : prevIndex + 1
+        );
     };
 
     const handlePrev = () => {
-        if (containerRef.current) {
-            let newPosition = position - scrollAmount;
-            let newIndex = currentIndex - 1;
-            
-            // If we reach the start
-            if (newIndex < 0) {
-                // Jump to end position without animation
-                const endScrollPosition = (drinks.length - 1) * scrollAmount;
-                containerRef.current.style.scrollBehavior = 'auto';
-                containerRef.current.scrollLeft = endScrollPosition;
-                newPosition = endScrollPosition - scrollAmount;
-                newIndex = drinks.length - 2;
-                
-                // Re-enable smooth scrolling after a brief delay
-                setTimeout(() => {
-                    if (containerRef.current) {
-                        containerRef.current.style.scrollBehavior = 'smooth';
-                        containerRef.current.scrollLeft = newPosition;
-                    }
-                }, 50);
-            } else {
-                containerRef.current.scrollTo({
-                    left: newPosition,
-                    behavior: 'smooth'
-                });
-            }
-            
-            setPosition(newPosition);
-            setCurrentIndex(newIndex);
-        }
+        setCurrentIndex((prevIndex) => 
+            prevIndex <= 0 ? drinks.length - 1 : prevIndex - 1
+        );
+    };
+
+    const getVisibleDrinks = () => {
+        const prev = currentIndex === 0 ? drinks.length - 1 : currentIndex - 1;
+        const next = currentIndex === drinks.length - 1 ? 0 : currentIndex + 1;
+        return [drinks[prev], drinks[currentIndex], drinks[next]];
     };
 
     return (
@@ -111,7 +61,8 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
             borderRadius: "12px",
             position: "relative",
             fontFamily: "'Press Start 2P', cursive",
-            overflow: "hidden"
+            overflow: "hidden",
+            perspective: "1000px"
         }}>
             <motion.button
                 className="arrow left"
@@ -141,25 +92,33 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                 style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "center",
                     gap: "20px",
                     padding: "1rem",
-                    overflowX: "hidden",
-                    scrollBehavior: "smooth",
-                    WebkitOverflowScrolling: "touch",
-                    scrollSnapType: "x mandatory"
+                    position: "relative",
+                    height: "400px"
                 }}
             >
-                {duplicatedDrinks.map((drink, index) => (
+                {getVisibleDrinks().map((drink, index) => (
                     <motion.div
                         key={`${drink.idDrink}-${index}`}
-                        whileHover={{ 
-                            scale: 1.1,
-                            transition: { duration: 0.3 }
+                        initial={false}
+                        animate={{
+                            scale: index === 1 ? 1 : 0.8,
+                            x: (index - 1) * 250,
+                            rotateY: index === 0 ? 45 : index === 2 ? -45 : 0,
+                            z: index === 1 ? 0 : -100,
+                            opacity: index === 1 ? 1 : 0.6
+                        }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30
                         }}
                         style={{
-                            flex: "0 0 180px",
-                            scrollSnapAlign: "start",
-                            filter: "drop-shadow(0 0 10px #ff00ff)"
+                            position: "absolute",
+                            width: "200px",
+                            transformStyle: "preserve-3d"
                         }}
                     >
                         <div style={{
@@ -167,7 +126,9 @@ const DrinkCarousel: React.FC<DrinkCarouselProps> = ({ drinks }) => {
                             padding: "1rem",
                             borderRadius: "8px",
                             border: "2px solid #ff69b4",
-                            boxShadow: "0 0 15px #ff00ff"
+                            boxShadow: index === 1 ? 
+                                "0 0 25px #ff00ff" : 
+                                "0 0 15px rgba(255, 0, 255, 0.5)"
                         }}>
                             <CocktailCard cocktail={drink} />
                         </div>
